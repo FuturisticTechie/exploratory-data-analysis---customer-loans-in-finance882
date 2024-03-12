@@ -43,6 +43,12 @@ class DataFrameInfo:
         else:
             numeric_cols = df.select_dtypes(include=['number']).columns
             return df[numeric_cols].mean()
+        
+    def mode(self, df, column=None):
+        if column: 
+            return df[column].mode()
+        else:
+            return df.mode()
 
         
     def distinct_count(self, df, column):
@@ -65,3 +71,10 @@ class DataFrameInfo:
         return df.isnull().sum()/len(df)
 
 # Any other methods you may find useful
+    
+    def calculate_skew(self, df):
+        # Filter numeric columns
+        numeric_columns = df.select_dtypes(include=['number'])
+        # Calculate skewness for numeric columns
+        skewed_data = numeric_columns.skew()
+        return skewed_data
