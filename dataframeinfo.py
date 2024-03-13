@@ -78,3 +78,34 @@ class DataFrameInfo:
         # Calculate skewness for numeric columns
         skewed_data = numeric_columns.skew()
         return skewed_data
+    
+    # to take a panda series and return only the values within the skew threshold 
+    def threshold_skew(self, series, threshold=None):
+        if threshold is None:
+            return series  # Return the original series if threshold is not provided
+        
+        # Filter values within the skew threshold
+        filtered_series = series[abs(series) >= threshold]
+        
+        return filtered_series
+
+
+    def box_plot_transform(self, series, threshold=None):
+        if threshold is None:
+            return series  # Return the original series if threshold is not provided
+        
+        # Filter values within the skew threshold
+        filtered_series = series[abs(series) >= threshold]
+
+        transformed_data = pd.DataFrame(index=filtered_series.index)
+
+        # Apply Box-Cox transform to each column
+        for col in filtered_series.index:
+            data = filtered_series[col].dropna()  # Drop missing values
+            data = data[data > 0]  # Filter out zero or negative values
+            transformed_column, lambda_value = stats.boxcox(data)
+            transformed_data[col] = transformed_column
+
+        return transformed_data
+
+
