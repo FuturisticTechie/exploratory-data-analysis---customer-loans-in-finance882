@@ -72,22 +72,22 @@ class DataFrameInfo:
 
 # Any other methods you may find useful
     
-    def calculate_skew(self, df):
-        # Filter numeric columns
-        numeric_columns = df.select_dtypes(include=['number'])
-        # Calculate skewness for numeric columns
-        skewed_data = numeric_columns.skew()
-        return skewed_data
+    # def calculate_skew(self, df):
+    #     # Filter numeric columns
+    #     numeric_columns = df.select_dtypes(include=['number'])
+    #     # Calculate skewness for numeric columns
+    #     skewed_data = numeric_columns.skew()
+    #     return skewed_data
     
-    # to take a panda series and return only the values within the skew threshold 
-    def threshold_skew(self, series, threshold=None):
-        if threshold is None:
-            return series  # Return the original series if threshold is not provided
+    # # to take a panda series and return only the values within the skew threshold 
+    # def threshold_skew(self, series, threshold=None):
+    #     if threshold is None:
+    #         return series  # Return the original series if threshold is not provided
         
-        # Filter values within the skew threshold
-        filtered_series = series[abs(series) >= threshold]
+    #     # Filter values within the skew threshold
+    #     filtered_series = series[abs(series) >= threshold]
         
-        return filtered_series
+    #     return filtered_series
 
 
     def box_plot_transform(self, series, threshold=None):

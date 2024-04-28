@@ -1,6 +1,9 @@
 
 import pandas as pd
 from scipy import stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 
 class DataFrameTransform:
@@ -70,3 +73,29 @@ class DataFrameTransform:
                 print(f"Column '{col}' not found in DataFrame.")
 
         return transformed_data
+    
+    # def yeojohnson_transform(self, df, column=None):
+    #     if column is not None and isinstance(column, str):
+    #         transformed_data, _ = stats.yeojohnson(df[column])
+    #         transformed_data = pd.Series(transformed_data)
+    #         t = sns.histplot(transformed_data, label="Skewness: %.2f" % transformed_data.skew())
+    #         return t
+    #     else:
+    #         return None
+
+        
+
+    def yeojohnson_transform(self, df, column=None):
+        if column is not None and isinstance(column, (list, pd.Series)):
+            transformed_data = pd.DataFrame()
+            for col in column:
+                if col in df.columns:
+                    transformed_col, _ = stats.yeojohnson(df[col])
+                    transformed_data[col] = transformed_col
+                    sns.histplot(transformed_col, label=f"Skewness: {transformed_col.skew():.2f}")
+                    plt.legend()
+                else:
+                    print(f"Column '{col}' not found in DataFrame.")
+            return transformed_data
+        else:
+            return None

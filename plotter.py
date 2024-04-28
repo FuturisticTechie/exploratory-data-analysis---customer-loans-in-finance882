@@ -13,38 +13,37 @@ class Plotter:
         return msno.matrix(df)
     
 
-    # def facet_grid_histogram(self, df):
-    #     # Filter numeric columns
-    #     numeric_columns = df.select_dtypes(include=['number'])
-    #     # Reshape the DataFrame into long format
-    #     melted_df = numeric_columns.melt()
-    #     # Create a FacetGrid with Seaborn
-    #     g = sns.FacetGrid(melted_df, col='variable', col_wrap=3, sharex=False, sharey=False)
-    #     # Map histogram plot to each variable
-    #     g.map(sns.histplot, 'value')
-    #     # Set titles for each subplot based on the variable name
-    #     for ax, title in zip(g.axes.flat, numeric_columns.columns):
-    #         ax.set_title(title)
-    #     # Adjust layout
-    #     plt.tight_layout()
-    #     # Show plot
-    #     plt.show()
+    def histogram_plot (self, df, column=None):
+        if column:
+            df[column].hist(bins=50)
+            return plt.show()
+        else:
+            df.hist(bins=50)
+            return plt.show()
 
-    # def facet_grid_histogram(self, series):
-    #     # Create a DataFrame with the series data
-    #     df = pd.DataFrame(series, columns=['skewness'])
-    #     # Reshape the DataFrame into long format
-    #     melted_df = df.reset_index().melt(value_vars=['skewness'], var_name='variable', value_name='value')
-    #     # Create a FacetGrid with Seaborn
-    #     facet_grid = sns.FacetGrid(melted_df, col='variable', col_wrap=3, sharex=False, sharey=False)
-    #     # Map histogram plot to each variable
-    #     facet_grid.map(sns.histplot, 'value', kde=True, bins=20)
-    #     # Set titles for each subplot based on the variable name
-    #     facet_grid.set_titles("{col_name}")
-    #     # Adjust layout
-    #     plt.tight_layout()
-    #     # Show plot
-    #     plt.show()
+
+    def kernel_density_estimate_plot(self, df, column=None):
+        if column:
+            plot = sns.histplot(data=df, x=column, kde=True)
+        else:
+            plot = sns.histplot(data=df, kde=True)
+        sns.despine()
+        return plot
+    
+    #This section is being edited --- THIS NEEDS TESTING
+    def box_and_whiskers_plot (self, df, column=None):
+        if column:
+            box_plot = px.box(df, y = column, width = 600, height = 500)
+        else:
+            box_plot = px.box(df, width = 600, height = 500)
+        return box_plot.show()
+
+# WORK ON THIS CODE NEXT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # def violin_plot (self, column, df):
+
+    #     sns.violinplot(data = df, y = column)
+    #     return sns.despine()
+
 
     def skew_check(self, df):
         numeric_data = ['loan_amount',
