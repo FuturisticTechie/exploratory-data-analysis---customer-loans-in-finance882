@@ -66,7 +66,7 @@ class Plotter:
 
     
 
-
+    #DELETE THIS!!!!!!!!!!!
     def skew_check(self, df):
         numeric_data = ['loan_amount',
                     'funded_amount', 
@@ -91,6 +91,28 @@ class Plotter:
         print(categorical_data)
 
 
+    #Code to visulaise skewness acorss all the data
+    def visualise_skewness(self, df):
+        '''This method plots the data to visualise the skew. It uses Seaborn's Histogram with KDE line plot to achieve this.       
+              
+        Returns:
+        --------
+        plot
+            Seaborn's Histogram with KDE line plot.
+        '''  
+        #select only the numeric columns in the DataFrame
+        # df = self.df.select_dtypes(include=['float64'])
+        df = df.select_dtypes(include=['number'])
+        plt.figure(figsize=(18,14))
 
+        for i in list(enumerate(df.columns)):
+            fig_cols = 4
+            fig_rows = int(len(df.columns)/fig_cols) + 1
+            plt.subplot(fig_rows, fig_cols, i[0]+1)
+            sns.histplot(data = df[i[1]], kde=True)
+
+        # Show the plot
+        plt.tight_layout()
+        return plt.show()
 
 # plot = Plotter()

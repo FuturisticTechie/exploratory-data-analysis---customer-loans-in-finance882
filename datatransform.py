@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 from plotter import Plotter
+from scipy import stats
 
 class DataTransform:
     def __init__(self):
@@ -35,16 +36,6 @@ class DataTransform:
          
         return log_skewness
 
-    
-        # NEEEEEEEEDS TESTINGGGGG!!!!!!!!!
-    # def box_cox_transform(self, df, column):
-    #     boxcox_transform = self.df[column]
-    #     boxcox_transform = stats.boxcox(boxcox_transform)
-    #     boxcox_transform = pd.Series(boxcox_transform[0])
-    #     return boxcox_transform.skew()
-
-
-     # NEEEEEEEEDS TESTINGGGGG!!!!!!!!!
     def box_cox_transform(self, df, column):
         # Calculate skewness of the original column
         original_skewness = df[column].skew()
@@ -55,7 +46,8 @@ class DataTransform:
         self.plotter.qq_plotter(df, column)  # Pass the DataFrame and column name
 
         #Apply the transformation
-        boxcox_transform = self.df[column]
+        # boxcox_transform = self.df[column]
+        boxcox_transform = df[column]
         boxcox_transform = stats.boxcox(boxcox_transform)
         boxcox_transform = pd.Series(boxcox_transform[0])
 
@@ -63,11 +55,33 @@ class DataTransform:
         log_skewness = boxcox_transform.skew()
         print("After Box-Cox transformation, the skewness is:", log_skewness)
         
-        # Plot transformed data -------WE ARE HERE NOWWWW
-        self.plotter.kernel_density_estimate_plot(log_column)  # Use the plotter instance
+        # Plot transformed data
+        self.plotter.kernel_density_estimate_plot(boxcox_transform)  # Use the plotter instance
         self.plotter.qq_plotter(df, column)  # Pass the DataFrame and column name
 
         return boxcox_transform.skew()
+    
+    #CURRENTLY WORKING ON THIS TO MASS TRANSFORM DATA--- HAS NOT BEEN STARTED TESTING YET!!!!!!!!!!!!!!
+    def transform_columns(self):
+        '''This method transforms to identified columns of the DataFrame to reduce skewness.
+              
+        Returns:
+        --------
+        dataframe
+            A Pandas DataFrame
+        '''  
+        #select only the numeric columns in the DataFrame
+        df = self.impute_null_values().select_dtypes(include=['float64']) # include=np.number
+        
+        # Model Creation
+        p_scaler = PowerTransformer(method='yeo-johnson')
+        # yeojohnTr = PowerTransformer(standardize=True)   # not using method attribute as yeo-johnson is the default
+
+        # fitting and transforming the model
+        df_yjt = pd.DataFrame(p_scaler.fit_transform(df), columns=df.columns)
+
+        return df_yjt   
+    
 
 
     # def yeo_johnson_transform(self, column):
